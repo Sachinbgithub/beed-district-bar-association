@@ -1,0 +1,58 @@
+import type { Notice } from "@/types";
+
+export const notices: Notice[] = [
+  {
+    id: "n-1",
+    title: "Election Schedule — Managing Committee 2026–28",
+    body: "Draft electoral roll, nomination dates and polling schedule for the Managing Committee elections of Beed Bar Association have been notified. Objections may be filed with the Returning Officer within the prescribed time…",
+    category: "Election",
+    publishedAt: "2026-11-09",
+    pdfFileName: "Election-Schedule.pdf",
+    isPublished: true,
+  },
+  {
+    id: "n-2",
+    title: "General Body Meeting — Agenda Circulated",
+    body: "All members are cordially invited to the General Body Meeting. Agenda includes annual accounts, library grants and welfare resolutions. Quorum as per Association bye-laws…",
+    category: "Meeting",
+    publishedAt: "2026-11-05",
+    pdfFileName: "GBM-Agenda.pdf",
+    isPublished: true,
+  },
+  {
+    id: "n-3",
+    title: "Court Sitting List — November 2026",
+    body: "Sitting list of Hon’ble Judicial Officers of Beed District for November 2026, including bail charge arrangements, has been circulated for the information of the Bar…",
+    category: "Circular",
+    publishedAt: "2026-11-01",
+    pdfFileName: "Sitting-List-Nov-2026.pdf",
+    isPublished: true,
+  },
+  {
+    id: "n-4",
+    title: "Annual Subscription for FY 2026–27",
+    body: "Members are requested to clear annual subscription for FY 2026–27 on or before 30 June 2026. Late fee as per bye-laws will apply thereafter…",
+    category: "General",
+    publishedAt: "2026-04-15",
+    pdfFileName: "Subscription-Notice.pdf",
+    isPublished: true,
+  },
+  {
+    id: "n-5",
+    title: "Library Timings Revised",
+    body: "With effect from 1 May 2026, the Bar Library will remain open from 10:30 AM to 5:30 PM on working days. Overdue books attract fine as per library rules…",
+    category: "Office Order",
+    publishedAt: "2026-04-22",
+    pdfFileName: "Library-Timings.pdf",
+    isPublished: true,
+  },
+  {
+    id: "n-6",
+    title: "Medical Claim Forms Available",
+    body: "Updated medical claim and death claim forms are available at the Association counter. Incomplete forms will not be forwarded…",
+    category: "Welfare",
+    publishedAt: "2026-03-28",
+    pdfFileName: "Medical-Claim-Form.pdf",
+    isPublished: true,
+  },
+];

@@ -1,0 +1,58 @@
+export const galleryItems = [
+  {
+    id: "g-1",
+    src: "/images/gallery/advocates.jpg",
+    title: "Advocates at the District Court Entrance",
+    caption: "Members of Beed Bar Association at the District & Sessions Court complex.",
+    category: "Members",
+  },
+  {
+    id: "g-2",
+    src: "/images/gallery/general-body.jpg",
+    title: "Full Court Reference — Observed",
+    caption: "General body meeting of the Association — all members cordially invited.",
+    category: "Meeting",
+  },
+  {
+    id: "g-3",
+    src: "/images/hero/district-court.jpg",
+    title: "Judicial Officers' Farewell",
+    caption: "District Court campus, Beed — ceremonies and official gatherings.",
+    category: "Court",
+  },
+  {
+    id: "g-4",
+    src: "/images/gallery/seminar.jpg",
+    title: "Foundation Day Lecture",
+    caption: "CLE lecture on constitutional values and judicial independence.",
+    category: "Seminar",
+  },
+  {
+    id: "g-5",
+    src: "/images/gallery/library.jpg",
+    title: "Evidence Act Workshop — Session I",
+    caption: "Study and research at the Association law library.",
+    category: "Workshop",
+  },
+  {
+    id: "g-6",
+    src: "/images/gallery/annual-day.jpg",
+    title: "New Criminal Laws Workshop",
+    caption: "Professional development programme for members of the Bar.",
+    category: "Workshop",
+  },
+  {
+    id: "g-7",
+    src: "/images/gallery/cricket.jpg",
+    title: "Advocates' Cricket Tournament",
+    caption: "Sports meet organised for chambers of the District Court.",
+    category: "Sports",
+  },
+  {
+    id: "g-8",
+    src: "/images/gallery/cricket.jpg",
+    title: "Cricket Final — Trophy Presentation",
+    caption: "Fellowship and trophies after the advocates' premier league.",
+    category: "Sports",
+  },
+] as const;

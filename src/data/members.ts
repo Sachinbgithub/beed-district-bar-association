@@ -1,6 +1,6 @@
 import type { Member } from "@/types";
 
-/** Demo advocate directory — Beed Bar Association (20 members). */
+/** Demo advocate directory — Beed District Bar Association (20 members). */
 export const members: Member[] = [
   {
     id: "m-1",

@@ -3,7 +3,7 @@ export const galleryItems = [
     id: "g-1",
     src: "/images/gallery/advocates.jpg",
     title: "Advocates at the District Court Entrance",
-    caption: "Members of Beed Bar Association at the District & Sessions Court complex.",
+    caption: "Members of Beed District Bar Association at the District & Sessions Court complex.",
     category: "Members",
   },
   {

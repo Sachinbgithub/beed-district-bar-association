@@ -1,6 +1,6 @@
 export const siteConfig = {
-  name: "Beed Bar Association",
-  shortName: "Beed Bar",
+  name: "Beed District Bar Association",
+  shortName: "BDBA",
   tagline: "Upholding the dignity of the legal profession",
   description:
     "The representative body of advocates practising at the District Court, Beed — working for member welfare, professional standards and access to justice.",
@@ -14,7 +14,7 @@ export const siteConfig = {
   },
   phone: "02422 000 000",
   phoneAlt: "+91 98765 43122",
-  email: "office@beedbar.demo.in",
+  email: "office@bdba.in",
   officeHours: [
     { days: "Court working days", hours: "10:30 AM – 5:30 PM" },
     { days: "Saturday", hours: "10:30 AM – 1:30 PM" },

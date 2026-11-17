@@ -25,7 +25,7 @@ export default async function HomePage() {
       <section className="relative isolate min-h-[72vh] w-full overflow-hidden bg-[var(--navy-deep)] text-white">
         <Image
           src="/images/hero/district-court.jpg"
-          alt="District Court building — Beed Bar Association"
+          alt="District Court building — Beed District Bar Association"
           fill
           priority
           className="object-cover"

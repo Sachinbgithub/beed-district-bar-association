@@ -1,9 +1,10 @@
 import Image from "next/image";
 import Link from "next/link";
 import { SectionHeader } from "@/components/ui/section-header";
-import { galleryItems } from "@/data/gallery";
+import { getGalleryItems } from "@/services/gallery";
 
-export function HomeGallery() {
+export async function HomeGallery() {
+  const galleryItems = await getGalleryItems();
   const items = galleryItems.slice(0, 8);
 
   return (

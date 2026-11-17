@@ -21,7 +21,7 @@ export default async function AboutPage() {
         <div className="relative min-h-72 overflow-hidden rounded-2xl lg:min-h-full">
           <Image
             src="/images/gallery/advocates.jpg"
-            alt="Members of Beed Bar Association"
+            alt="Members of Beed District Bar Association"
             fill
             className="object-cover"
             sizes="(max-width: 1024px) 100vw, 50vw"
@@ -52,7 +52,7 @@ export default async function AboutPage() {
         <p className="mt-3 text-sm text-[var(--muted)]">
           Elected representatives of the Association for the current term
         </p>
-        <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
+        <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {bearers.map((person) => (
             <BearerCard key={person.id} person={person} />
           ))}

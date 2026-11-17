@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist_Mono, Libre_Baskerville, Source_Sans_3 } from "next/font/google";
 import { siteConfig } from "@/config/site";
+import { getLocale } from "@/lib/locale";
 import "./globals.css";
 
 const sourceSans = Source_Sans_3({
@@ -27,10 +28,12 @@ export const metadata: Metadata = {
   description: siteConfig.description,
 };
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+export default async function RootLayout({ children }: LayoutProps<"/">) {
+  const locale = await getLocale();
+
   return (
     <html
-      lang="en"
+      lang={locale}
       className={`${sourceSans.variable} ${libre.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="flex min-h-full flex-col bg-[var(--background)] text-[var(--foreground)]">

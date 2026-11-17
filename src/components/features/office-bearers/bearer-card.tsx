@@ -46,23 +46,22 @@ export function BearerCard({ person }: { person: OfficeBearer }) {
         {person.designation}
       </span>
 
-      <div className="mt-4 w-full space-y-2 text-left text-sm text-[var(--muted)]">
-        {person.phone ? (
-          <p className="flex flex-wrap items-center gap-2">
-            <PhoneIcon />
-            <span>{person.phone}</span>
-            <span className="rounded bg-[var(--gold-soft)] px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-[#8a6d1d]">
-              Demo data
-            </span>
-          </p>
-        ) : null}
-        {person.email ? (
-          <p className="flex items-center gap-2 break-all">
-            <MailIcon />
-            {person.email}
-          </p>
-        ) : null}
-      </div>
+      {person.phone || person.email ? (
+        <div className="mt-4 w-full space-y-2 text-left text-sm text-[var(--muted)]">
+          {person.phone ? (
+            <p className="flex flex-wrap items-center gap-2">
+              <PhoneIcon />
+              <span>{person.phone}</span>
+            </p>
+          ) : null}
+          {person.email ? (
+            <p className="flex items-center gap-2 break-all">
+              <MailIcon />
+              {person.email}
+            </p>
+          ) : null}
+        </div>
+      ) : null}
 
       {person.enrollmentNo ? (
         <p className="mt-4 w-full border-t border-[var(--border)] pt-3 text-left text-xs text-[var(--muted)]">

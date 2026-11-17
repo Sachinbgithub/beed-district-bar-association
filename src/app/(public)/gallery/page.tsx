@@ -1,14 +1,16 @@
 import Image from "next/image";
 import { Container } from "@/components/layout/container";
 import { SectionHeading } from "@/components/ui/section-heading";
-import { galleryItems } from "@/data/gallery";
+import { getGalleryItems } from "@/services/gallery";
 
-export default function GalleryPage() {
+export default async function GalleryPage() {
+  const galleryItems = await getGalleryItems();
+
   return (
     <Container className="py-10">
       <SectionHeading
         title="Photo Gallery"
-        description="Life of Beed Bar Association — court, seminars, meetings, workshops, sports, and social work."
+        description="Life of Beed District Bar Association — court, seminars, meetings, workshops, sports, and social work."
       />
       <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4 md:gap-5">
         {galleryItems.map((item) => (

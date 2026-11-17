@@ -10,7 +10,7 @@ export default async function NoticesPage() {
     <Container className="py-10">
       <SectionHeading
         title="Notices & Circulars"
-        description="Office orders, court sitting lists, election schedules, and announcements of Beed Bar Association."
+        description="Office orders, court sitting lists, election schedules, and announcements of Beed District Bar Association."
       />
       <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
         {notices.map((notice) => (

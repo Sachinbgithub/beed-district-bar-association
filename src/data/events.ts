@@ -49,7 +49,7 @@ export const events: AssociationEvent[] = [
     id: "e-5",
     title: "Annual Day Celebration",
     description:
-      "Cultural evening for members and families — felicitation of senior advocates and togetherness of the Beed Bar…",
+      "Cultural evening for members and families — felicitation of senior advocates and togetherness of the Beed District Bar…",
     venue: "Town Hall, Beed",
     startsAt: "2026-01-17T18:00:00+05:30",
     category: "Cultural",

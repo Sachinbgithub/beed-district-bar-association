@@ -1,19 +1,22 @@
 import { Card } from "@/components/ui/card";
 import { SectionHeading } from "@/components/ui/section-heading";
+import { getSessionUser } from "@/lib/auth";
 
 const widgets = [
-  { title: "Subscription", text: "FY 2026–27 dues status will show here after login." },
-  { title: "ID card", text: "Digital / physical ID card request and status." },
+  { title: "Subscription", text: "FY 2026–27 dues status will show here in a later version." },
+  { title: "ID card", text: "Digital / physical ID card request and status — later version." },
   { title: "Notices for members", text: "Members-only circulars and attachments." },
   { title: "Event RSVP", text: "Register for CLE seminars and association programmes." },
 ];
 
-export default function DashboardPage() {
+export default async function DashboardPage() {
+  const user = await getSessionUser();
+
   return (
     <div>
       <SectionHeading
         title="Member dashboard"
-        description="Protected area for enrolled advocates — dues, ID card, notices, and event RSVP (auth coming later)."
+        description={`Signed in as ${user?.fullName ?? user?.email ?? "member"}. Dues and ID card remain for a later version.`}
       />
       <div className="grid gap-4 sm:grid-cols-2">
         {widgets.map((item) => (

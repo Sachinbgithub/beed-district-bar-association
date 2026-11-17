@@ -4,7 +4,7 @@ export const achievements: Achievement[] = [
   {
     id: "a-1",
     category: "Competition",
-    title: "State Moot Court Cup Won by Beed Bar Team",
+    title: "State Moot Court Cup Won by BDBA Team",
     description:
       "The Association's moot team won the inter-district State Moot Court Cup held at Aurangabad, defeating 16 district teams. (DEMO ACHIEVEMENT — fictional content.)",
   },

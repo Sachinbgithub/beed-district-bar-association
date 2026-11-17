@@ -4,7 +4,7 @@ export const notices: Notice[] = [
   {
     id: "n-1",
     title: "Election Schedule — Managing Committee 2026–28",
-    body: "Draft electoral roll, nomination dates and polling schedule for the Managing Committee elections of Beed Bar Association have been notified. Objections may be filed with the Returning Officer within the prescribed time…",
+    body: "Draft electoral roll, nomination dates and polling schedule for the Managing Committee elections of Beed District Bar Association have been notified. Objections may be filed with the Returning Officer within the prescribed time…",
     category: "Election",
     publishedAt: "2026-11-09",
     pdfFileName: "Election-Schedule.pdf",

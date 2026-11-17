@@ -1,6 +1,6 @@
 export const aboutContent = {
   history: [
-    "Beed Bar Association organises advocates practising at the District & Sessions Court, Beed, and works to uphold the dignity of the legal profession in the district.",
+    "Beed District Bar Association organises advocates practising at the District & Sessions Court, Beed, and works to uphold the dignity of the legal profession in the district.",
     "The Association coordinates with the District Judiciary for smooth court administration, circulates sitting lists and notices, and provides library, ID card, and welfare facilities to enrolled members.",
     "Through CLE seminars, general body meetings, sports, cultural programmes, and social initiatives such as tree plantation, the Bar remains active beyond the courtroom.",
   ],

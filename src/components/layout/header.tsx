@@ -1,9 +1,18 @@
 import Link from "next/link";
+import { logoutAction } from "@/app/actions/auth";
+import { LocaleSwitcher } from "@/components/i18n/locale-switcher";
 import { siteConfig } from "@/config/site";
 import { moreNav, primaryNav } from "@/constants/navigation";
+import { getDictionary } from "@/i18n/dictionaries";
+import { getSessionUser, isStaffRole } from "@/lib/auth";
+import { getLocale } from "@/lib/locale";
 import { Container } from "./container";
 
-export function Header() {
+export async function Header() {
+  const locale = await getLocale();
+  const dict = getDictionary(locale);
+  const user = await getSessionUser();
+
   return (
     <header className="border-b border-[var(--gold)]/70 bg-[var(--navy-deep)] text-white">
       <Container className="flex h-[4.25rem] items-center justify-between gap-4">
@@ -23,8 +32,12 @@ export function Header() {
 
         <nav className="hidden items-center gap-4 text-[13px] xl:gap-6 xl:text-sm min-[980px]:flex">
           {primaryNav.map((item) => (
-            <Link key={item.href} href={item.href} className="whitespace-nowrap text-white/90 hover:text-white">
-              {item.label}
+            <Link
+              key={item.href}
+              href={item.href}
+              className="whitespace-nowrap text-white/90 hover:text-white"
+            >
+              {dict.nav[item.labelKey]}
             </Link>
           ))}
           <div className="group relative">
@@ -33,31 +46,61 @@ export function Header() {
               className="inline-flex items-center gap-1 whitespace-nowrap text-white/90 hover:text-white"
               aria-haspopup="menu"
             >
-              More
+              {dict.nav.more}
               <ChevronIcon />
             </button>
             <div className="invisible absolute right-0 top-full z-50 mt-2 min-w-44 rounded-lg border border-white/10 bg-[var(--navy-deep)] py-2 opacity-0 shadow-lg transition group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100">
               {moreNav.map((item) => (
                 <Link
-                  key={`${item.href}-${item.label}`}
+                  key={`${item.href}-${item.labelKey}`}
                   href={item.href}
                   className="block px-4 py-2 text-sm text-white/85 hover:bg-white/10 hover:text-white"
                 >
-                  {item.label}
+                  {dict.nav[item.labelKey]}
                 </Link>
               ))}
+              {user && isStaffRole(user.role) ? (
+                <Link
+                  href="/admin"
+                  className="block px-4 py-2 text-sm text-white/85 hover:bg-white/10 hover:text-white"
+                >
+                  {dict.nav.admin}
+                </Link>
+              ) : null}
             </div>
           </div>
         </nav>
 
-        <Link
-          href="/login"
-          className="inline-flex shrink-0 items-center gap-2 rounded-md bg-[var(--gold)] px-3.5 py-2 text-sm font-semibold text-[var(--navy-deep)] transition hover:brightness-105"
-        >
-          <LoginIcon />
-          <span className="hidden sm:inline">Member Login</span>
-          <span className="sm:hidden">Login</span>
-        </Link>
+        <div className="flex shrink-0 items-center gap-2">
+          <LocaleSwitcher locale={locale} />
+          {user ? (
+            <>
+              <Link
+                href={isStaffRole(user.role) ? "/admin" : "/dashboard"}
+                className="hidden rounded-md border border-white/20 px-3 py-2 text-sm text-white sm:inline"
+              >
+                {isStaffRole(user.role) ? dict.nav.admin : dict.nav.dashboard}
+              </Link>
+              <form action={logoutAction}>
+                <button
+                  type="submit"
+                  className="inline-flex items-center gap-2 rounded-md bg-[var(--gold)] px-3.5 py-2 text-sm font-semibold text-[var(--navy-deep)]"
+                >
+                  {dict.nav.logout}
+                </button>
+              </form>
+            </>
+          ) : (
+            <Link
+              href="/login"
+              className="inline-flex shrink-0 items-center gap-2 rounded-md bg-[var(--gold)] px-3.5 py-2 text-sm font-semibold text-[var(--navy-deep)] transition hover:brightness-105"
+            >
+              <LoginIcon />
+              <span className="hidden sm:inline">{dict.nav.login}</span>
+              <span className="sm:hidden">Login</span>
+            </Link>
+          )}
+        </div>
       </Container>
     </header>
   );

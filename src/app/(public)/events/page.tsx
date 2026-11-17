@@ -10,7 +10,7 @@ export default async function EventsPage() {
     <Container className="py-10">
       <SectionHeading
         title="Events & programmes"
-        description="CLE seminars, general body meetings, sports, cultural gatherings, and legal aid camps of Beed Bar Association."
+        description="CLE seminars, general body meetings, sports, cultural gatherings, and legal aid camps of Beed District Bar Association."
       />
       <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
         {events.map((event) => (

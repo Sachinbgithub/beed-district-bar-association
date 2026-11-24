@@ -16,6 +16,7 @@ const en = {
     login: "Member Login",
     logout: "Sign out",
     admin: "Admin",
+    account: "Account",
   },
   common: {
     viewAll: "View All",
@@ -67,6 +68,7 @@ const mr: DictionaryShape = {
     login: "सदस्य लॉगिन",
     logout: "साइन आउट",
     admin: "प्रशासन",
+    account: "खाते",
   },
   common: {
     viewAll: "सर्व पहा",
@@ -114,6 +116,7 @@ const hi: DictionaryShape = {
     login: "सदस्य लॉगिन",
     logout: "साइन आउट",
     admin: "प्रशासन",
+    account: "खाता",
   },
   common: {
     viewAll: "सभी देखें",

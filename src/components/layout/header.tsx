@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { logoutAction } from "@/app/actions/auth";
 import { LocaleSwitcher } from "@/components/i18n/locale-switcher";
+import { AccountMenu } from "@/components/layout/account-menu";
 import { siteConfig } from "@/config/site";
 import { moreNav, primaryNav } from "@/constants/navigation";
 import { getDictionary } from "@/i18n/dictionaries";
@@ -21,7 +22,7 @@ export async function Header() {
             <ScalesIcon />
           </span>
           <span className="min-w-0">
-            <span className="block truncate font-serif text-lg font-bold leading-tight tracking-wide">
+            <span className="block truncate font-serif text-sm font-bold leading-tight tracking-wide min-[400px]:text-base min-[980px]:text-lg">
               {siteConfig.name}
             </span>
             <span className="mt-0.5 block text-[10px] font-medium uppercase tracking-[0.16em] text-[var(--gold)]">
@@ -72,33 +73,54 @@ export async function Header() {
         </nav>
 
         <div className="flex shrink-0 items-center gap-2">
-          <LocaleSwitcher locale={locale} />
           {user ? (
             <>
-              <Link
-                href={isStaffRole(user.role) ? "/admin" : "/dashboard"}
-                className="hidden rounded-md border border-white/20 px-3 py-2 text-sm text-white sm:inline"
-              >
-                {isStaffRole(user.role) ? dict.nav.admin : dict.nav.dashboard}
-              </Link>
-              <form action={logoutAction}>
-                <button
-                  type="submit"
-                  className="inline-flex items-center gap-2 rounded-md bg-[var(--gold)] px-3.5 py-2 text-sm font-semibold text-[var(--navy-deep)]"
+              <div className="hidden items-center gap-2 min-[980px]:flex">
+                <LocaleSwitcher locale={locale} />
+                <Link
+                  href={isStaffRole(user.role) ? "/admin" : "/dashboard"}
+                  className="inline-flex min-h-11 items-center rounded-md border border-white/20 px-3 py-2 text-sm text-white"
                 >
-                  {dict.nav.logout}
-                </button>
-              </form>
+                  {isStaffRole(user.role) ? dict.nav.admin : dict.nav.dashboard}
+                </Link>
+                <form action={logoutAction}>
+                  <button
+                    type="submit"
+                    className="inline-flex min-h-11 items-center gap-2 rounded-md bg-[var(--gold)] px-3.5 py-2 text-sm font-semibold text-[var(--navy-deep)]"
+                  >
+                    {dict.nav.logout}
+                  </button>
+                </form>
+              </div>
+              <AccountMenu
+                locale={locale}
+                accountHref={isStaffRole(user.role) ? "/admin" : "/dashboard"}
+                accountLabel={isStaffRole(user.role) ? dict.nav.admin : dict.nav.dashboard}
+                signOutLabel={dict.nav.logout}
+                languageLabel={dict.common.language}
+                menuLabel={dict.nav.account}
+              />
             </>
           ) : (
-            <Link
-              href="/login"
-              className="inline-flex shrink-0 items-center gap-2 rounded-md bg-[var(--gold)] px-3.5 py-2 text-sm font-semibold text-[var(--navy-deep)] transition hover:brightness-105"
-            >
-              <LoginIcon />
-              <span className="hidden sm:inline">{dict.nav.login}</span>
-              <span className="sm:hidden">Login</span>
-            </Link>
+            <>
+              <div className="hidden items-center gap-2 min-[980px]:flex">
+                <LocaleSwitcher locale={locale} />
+                <Link
+                  href="/login"
+                  className="inline-flex shrink-0 items-center gap-2 rounded-md bg-[var(--gold)] px-3.5 py-2 text-sm font-semibold text-[var(--navy-deep)] transition hover:brightness-105"
+                >
+                  <LoginIcon />
+                  {dict.nav.login}
+                </Link>
+              </div>
+              <AccountMenu
+                locale={locale}
+                loginHref="/login"
+                loginLabel={dict.nav.login}
+                languageLabel={dict.common.language}
+                menuLabel={dict.nav.account}
+              />
+            </>
           )}
         </div>
       </Container>

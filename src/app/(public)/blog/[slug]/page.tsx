@@ -2,8 +2,10 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { commentPostAction, likePostAction } from "@/app/actions/blog";
 import { Container } from "@/components/layout/container";
+import { getDictionary } from "@/i18n/dictionaries";
 import { getSessionUser, isStaffRole } from "@/lib/auth";
 import { formatDate, formatDateTime } from "@/lib/format";
+import { formatMessage, getLocale, pickLocalized } from "@/lib/locale";
 import { getPostBySlug } from "@/services/blog";
 
 type PageProps = {
@@ -15,6 +17,10 @@ export default async function BlogPostPage({ params }: PageProps) {
   const post = await getPostBySlug(slug);
   if (!post) notFound();
 
+  const locale = await getLocale();
+  const dict = getDictionary(locale);
+  const title = pickLocalized(locale, post.title, post.titleMr, post.titleHi);
+  const body = pickLocalized(locale, post.body, post.bodyMr, post.bodyHi);
   const user = await getSessionUser();
   const canInteract = Boolean(user && (user.role === "MEMBER" || isStaffRole(user.role)));
   const liked = user ? post.likes.some((like) => like.userId === user.id) : false;
@@ -22,18 +28,21 @@ export default async function BlogPostPage({ params }: PageProps) {
   return (
     <Container className="py-10">
       <Link href="/blog" className="text-sm text-[var(--muted)] hover:text-[var(--navy)]">
-        ← Back to blog
+        {dict.copy.backToBlog}
       </Link>
       <article className="mt-6 max-w-3xl">
         <p className="text-xs uppercase tracking-wide text-[var(--gold)]">
           {post.publishedAt ? formatDate(post.publishedAt.toISOString()) : ""}
         </p>
-        <h1 className="mt-2 font-serif text-4xl font-bold text-[var(--navy)]">{post.title}</h1>
-        <p className="mt-6 whitespace-pre-wrap leading-relaxed text-[var(--muted)]">{post.body}</p>
+        <h1 className="mt-2 font-serif text-4xl font-bold text-[var(--navy)]">{title}</h1>
+        <p className="mt-6 whitespace-pre-wrap leading-relaxed text-[var(--muted)]">{body}</p>
 
         <div className="mt-8 flex flex-wrap items-center gap-4 border-t border-[var(--border)] pt-6">
           <p className="text-sm text-[var(--muted)]">
-            {post._count.likes} likes · {post._count.comments} comments
+            {formatMessage(dict.copy.likesComments, {
+              likes: post._count.likes,
+              comments: post._count.comments,
+            })}
           </p>
           {canInteract ? (
             <form action={likePostAction}>

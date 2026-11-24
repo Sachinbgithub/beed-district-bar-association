@@ -1,30 +1,32 @@
 import Link from "next/link";
 import { Container } from "@/components/layout/container";
 import { siteConfig } from "@/config/site";
+import { getDictionary } from "@/i18n/dictionaries";
+import { formatMessage, getLocale } from "@/lib/locale";
 
-const quickLinks = [
-  { href: "/about", label: "About Us" },
-  { href: "/about", label: "Office Bearers" },
-  { href: "/members", label: "Members Directory" },
-  { href: "/events", label: "Events" },
-  { href: "/about", label: "Achievements" },
-];
+export async function Footer() {
+  const dict = getDictionary(await getLocale());
+  const quickLinks = [
+    { href: "/about", label: dict.nav.about },
+    { href: "/about", label: dict.nav.officeBearers },
+    { href: "/members", label: dict.copy.membersTitle },
+    { href: "/events", label: dict.nav.events },
+    { href: "/about", label: dict.copy.achievementsTitle },
+  ];
+  const resourceLinks = [
+    { href: "/notices", label: dict.copy.noticesPageTitle },
+    { href: "/gallery", label: dict.copy.galleryPageTitle },
+    { href: "/gallery", label: dict.copy.videos },
+    { href: "/about", label: dict.copy.rules },
+    { href: "/contact", label: dict.copy.contactUs },
+    { href: "/login", label: dict.nav.login },
+  ];
 
-const resourceLinks = [
-  { href: "/notices", label: "Notices & Circulars" },
-  { href: "/gallery", label: "Photo Gallery" },
-  { href: "/gallery", label: "Videos" },
-  { href: "/about", label: "Rules & Regulations" },
-  { href: "/contact", label: "Contact Us" },
-  { href: "/login", label: "Member Login" },
-];
-
-export function Footer() {
   return (
     <footer className="mt-auto bg-[var(--navy-deep)] text-white">
       <Container className="flex flex-col gap-6 border-b border-[var(--gold)]/35 py-10 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h2 className="font-serif text-2xl font-bold">Get in touch with the Association</h2>
+          <h2 className="font-serif text-2xl font-bold">{dict.copy.getInTouch}</h2>
           <p className="mt-2 flex flex-wrap items-center gap-2 text-sm text-white/75">
             {siteConfig.address.line1}, Beed.
             <span className="rounded bg-[var(--gold)]/20 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-[var(--gold-soft)]">
@@ -36,7 +38,7 @@ export function Footer() {
           href="/contact"
           className="inline-flex w-fit rounded-md bg-[var(--gold)] px-5 py-2.5 text-sm font-semibold text-[var(--navy-deep)]"
         >
-          Contact Us
+          {dict.copy.contactUs}
         </Link>
       </Container>
 
@@ -53,15 +55,15 @@ export function Footer() {
             <span className="mr-2 inline-block align-middle text-[var(--gold)]">
               <ShieldIcon />
             </span>
-            Demo version — all names, contacts and documents are fictional sample data.
+            {dict.copy.demoBanner}
           </div>
         </div>
 
-        <FooterColumn title="Quick Links" links={quickLinks} />
-        <FooterColumn title="Resources" links={resourceLinks} />
+        <FooterColumn title={dict.copy.quickLinks} links={quickLinks} />
+        <FooterColumn title={dict.copy.resources} links={resourceLinks} />
 
         <div>
-          <h3 className="font-serif text-base font-bold text-[var(--gold)]">Contact (Demo)</h3>
+          <h3 className="font-serif text-base font-bold text-[var(--gold)]">{dict.copy.contactDemo}</h3>
           <div className="mt-2 h-0.5 w-10 bg-[var(--gold)]" />
           <ul className="mt-4 space-y-3 text-sm text-white/75">
             <li className="flex gap-2">
@@ -72,7 +74,7 @@ export function Footer() {
             </li>
             <li className="flex gap-2">
               <PhoneIcon />
-              <span>{siteConfig.phone} (demo)</span>
+              <span>{formatMessage(dict.copy.phoneDemo, { phone: siteConfig.phone })}</span>
             </li>
             <li className="flex gap-2">
               <MailIcon />
@@ -87,7 +89,7 @@ export function Footer() {
       </Container>
 
       <Container className="py-4 text-right text-xs text-white/55">
-        All data shown is fictional (DEMO) — for presentation to the managing committee only.
+        {dict.copy.demoFooter}
       </Container>
     </footer>
   );

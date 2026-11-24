@@ -7,12 +7,15 @@ import { HomeNotices } from "@/components/home/home-notices";
 import { HomeOfficeBearers } from "@/components/home/home-office-bearers";
 import { Container } from "@/components/layout/container";
 import { siteConfig } from "@/config/site";
+import { getDictionary } from "@/i18n/dictionaries";
+import { formatMessage, getLocale } from "@/lib/locale";
 import { getAchievements } from "@/services/achievements";
 import { getUpcomingEvents } from "@/services/events";
 import { getLatestNotices } from "@/services/notices";
 import { getOfficeBearers } from "@/services/office-bearers";
 
 export default async function HomePage() {
+  const dict = getDictionary(await getLocale());
   const [notices, events, bearers, achievements] = await Promise.all([
     getLatestNotices(3),
     getUpcomingEvents(3),
@@ -34,24 +37,24 @@ export default async function HomePage() {
         <div className="absolute inset-0 bg-gradient-to-r from-[var(--navy-deep)]/92 via-[var(--navy-deep)]/72 to-[var(--navy-deep)]/30" />
         <Container className="relative flex min-h-[72vh] flex-col justify-end pb-14 pt-24 sm:pb-20">
           <p className="text-sm uppercase tracking-[0.22em] text-[var(--gold)]">
-            Est. {siteConfig.established} · Beed, Maharashtra
+            {formatMessage(dict.copy.established, { year: siteConfig.established })}
           </p>
           <h1 className="mt-3 max-w-3xl font-serif text-4xl font-bold tracking-tight sm:text-5xl">
-            {siteConfig.name}
+            {dict.copy.siteName}
           </h1>
-          <p className="mt-4 max-w-xl text-base text-white/85 sm:text-lg">{siteConfig.tagline}</p>
+          <p className="mt-4 max-w-xl text-base text-white/85 sm:text-lg">{dict.copy.tagline}</p>
           <div className="mt-8 flex flex-wrap gap-3">
             <Link
               href="/members"
               className="rounded-md bg-[var(--gold)] px-5 py-2.5 text-sm font-semibold text-[var(--navy-deep)]"
             >
-              Member directory
+              {dict.home.memberDirectory}
             </Link>
             <Link
               href="/notices"
               className="rounded-md border border-white/30 px-5 py-2.5 text-sm text-white"
             >
-              Latest notices
+              {dict.home.latestNotices}
             </Link>
           </div>
         </Container>

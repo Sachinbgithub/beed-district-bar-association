@@ -1,14 +1,18 @@
 import { EventCard } from "@/components/features/events/event-card";
 import { SectionHeader } from "@/components/ui/section-header";
+import { getDictionary } from "@/i18n/dictionaries";
+import { getLocale } from "@/lib/locale";
 import type { AssociationEvent } from "@/types";
 
-export function HomeEvents({ events }: { events: AssociationEvent[] }) {
+export async function HomeEvents({ events }: { events: AssociationEvent[] }) {
+  const dict = getDictionary(await getLocale());
+
   return (
     <section>
       <SectionHeader
-        title="Upcoming Events"
+        title={dict.copy.eventsTitle}
         href="/events"
-        actionLabel="View All"
+        actionLabel={dict.common.viewAll}
         actionIcon={<CalendarIcon />}
       />
       <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">

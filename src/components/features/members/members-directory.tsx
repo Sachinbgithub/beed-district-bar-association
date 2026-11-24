@@ -4,7 +4,36 @@ import { useMemo, useState } from "react";
 import { MemberCard } from "@/components/features/members/member-card";
 import type { Member, MemberCategory } from "@/types";
 
-const categories: Array<"All categories" | MemberCategory> = [
+export type MemberDirectoryLabels = {
+  searchByName: string;
+  enrollmentNo: string;
+  category: string;
+  reset: string;
+  showingMembers: string;
+  noMembers: string;
+  namePlaceholder: string;
+  enrollmentPlaceholder: string;
+  allCategories: string;
+  lifeMember: string;
+  womenAdvocate: string;
+  annualMember: string;
+  seniorAdvocate: string;
+};
+
+type MembersDirectoryProps = {
+  members: Member[];
+  labels: MemberDirectoryLabels;
+};
+
+const categoryLabelKey = {
+  "All categories": "allCategories",
+  "Life Member": "lifeMember",
+  "Women Advocate": "womenAdvocate",
+  "Annual Member": "annualMember",
+  "Senior Advocate": "seniorAdvocate",
+} as const;
+
+const categoryValues: Array<"All categories" | MemberCategory> = [
   "All categories",
   "Life Member",
   "Women Advocate",
@@ -12,14 +41,10 @@ const categories: Array<"All categories" | MemberCategory> = [
   "Senior Advocate",
 ];
 
-type MembersDirectoryProps = {
-  members: Member[];
-};
-
-export function MembersDirectory({ members }: MembersDirectoryProps) {
+export function MembersDirectory({ members, labels }: MembersDirectoryProps) {
   const [nameQuery, setNameQuery] = useState("");
   const [enrollmentQuery, setEnrollmentQuery] = useState("");
-  const [category, setCategory] = useState<(typeof categories)[number]>("All categories");
+  const [category, setCategory] = useState<(typeof categoryValues)[number]>("All categories");
 
   const filtered = useMemo(() => {
     const name = nameQuery.trim().toLowerCase();
@@ -45,38 +70,38 @@ export function MembersDirectory({ members }: MembersDirectoryProps) {
       <div className="rounded-2xl border border-[var(--border)] bg-white p-4 shadow-[0_1px_3px_rgba(26,39,68,0.06)] sm:p-5">
         <div className="grid gap-3 lg:grid-cols-[1.2fr_1fr_1fr_auto]">
           <label className="grid gap-1.5 text-xs font-medium text-[var(--muted)]">
-            Search by name
+            {labels.searchByName}
             <span className="relative">
               <SearchIcon />
               <input
                 value={nameQuery}
                 onChange={(event) => setNameQuery(event.target.value)}
-                placeholder="e.g. Deshmukh"
+                placeholder={labels.namePlaceholder}
                 className="w-full rounded-lg border border-[var(--border)] py-2.5 pl-9 pr-3 text-sm text-[var(--navy)] outline-none focus:border-[var(--gold)]"
               />
             </span>
           </label>
 
           <label className="grid gap-1.5 text-xs font-medium text-[var(--muted)]">
-            Enrollment no.
+            {labels.enrollmentNo}
             <input
               value={enrollmentQuery}
               onChange={(event) => setEnrollmentQuery(event.target.value)}
-              placeholder="e.g. 1998/0156"
+              placeholder={labels.enrollmentPlaceholder}
               className="w-full rounded-lg border border-[var(--border)] px-3 py-2.5 text-sm text-[var(--navy)] outline-none focus:border-[var(--gold)]"
             />
           </label>
 
           <label className="grid gap-1.5 text-xs font-medium text-[var(--muted)]">
-            Category
+            {labels.category}
             <select
               value={category}
-              onChange={(event) => setCategory(event.target.value as (typeof categories)[number])}
+              onChange={(event) => setCategory(event.target.value as (typeof categoryValues)[number])}
               className="w-full rounded-lg border border-[var(--border)] bg-white px-3 py-2.5 text-sm text-[var(--navy)] outline-none focus:border-[var(--gold)]"
             >
-              {categories.map((item) => (
+              {categoryValues.map((item) => (
                 <option key={item} value={item}>
-                  {item}
+                  {labels[categoryLabelKey[item]]}
                 </option>
               ))}
             </select>
@@ -90,18 +115,20 @@ export function MembersDirectory({ members }: MembersDirectoryProps) {
               aria-label="Reset filters"
             >
               <ResetIcon />
-              Reset
+              {labels.reset}
             </button>
           </div>
         </div>
       </div>
 
       <p className="mt-5 text-sm text-[var(--muted)]">
-        Showing {filtered.length} of {members.length} members
+        {labels.showingMembers
+          .replaceAll("{shown}", String(filtered.length))
+          .replaceAll("{total}", String(members.length))}
       </p>
 
       {filtered.length === 0 ? (
-        <p className="mt-8 text-[var(--muted)]">No members match the current filters.</p>
+        <p className="mt-8 text-[var(--muted)]">{labels.noMembers}</p>
       ) : (
         <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {filtered.map((member) => (

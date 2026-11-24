@@ -1,7 +1,15 @@
 import Link from "next/link";
 import { publishBlogAction } from "@/app/actions/admin";
 import { BlogForm } from "@/components/admin/blog-form";
-import { SectionHeading } from "@/components/ui/section-heading";
+import {
+  AdminEmpty,
+  AdminList,
+  AdminPageHeader,
+  RecordRow,
+  StatusMark,
+  primaryButtonClass,
+  secondaryButtonClass,
+} from "@/components/admin/admin-ui";
 import { requireStaff } from "@/lib/auth";
 import { getAdminPosts } from "@/services/blog";
 
@@ -11,40 +19,39 @@ export default async function AdminBlogPage() {
 
   return (
     <div className="space-y-8">
-      <SectionHeading
+      <AdminPageHeader
         title="Blog"
         description="Write posts for the public site. Members can like and comment after login."
       />
       <BlogForm />
-      <div className="space-y-3">
-        {posts.map((post) => (
-          <div
-            key={post.id}
-            className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-[var(--border)] bg-white px-4 py-3"
-          >
-            <div>
-              <p className="font-medium text-[var(--navy)]">{post.title}</p>
-              <p className="text-sm text-[var(--muted)]">
-                /blog/{post.slug} · {post.isPublished ? "Published" : "Draft"}
-              </p>
-            </div>
-            <div className="flex gap-2">
-              {post.isPublished ? (
-                <Link href={`/blog/${post.slug}`} className="rounded-md border px-3 py-2 text-sm">
-                  View
-                </Link>
-              ) : (
-                <form action={publishBlogAction}>
-                  <input type="hidden" name="id" value={post.id} />
-                  <button type="submit" className="rounded-md bg-[var(--navy)] px-3 py-2 text-sm text-white">
-                    Publish
-                  </button>
-                </form>
-              )}
-            </div>
-          </div>
-        ))}
-      </div>
+      <AdminList>
+        {posts.length === 0 ? (
+          <AdminEmpty>No posts on record yet.</AdminEmpty>
+        ) : (
+          posts.map((post) => (
+            <RecordRow
+              key={post.id}
+              title={post.title}
+              status={<StatusMark status={post.isPublished ? "Published" : "Draft"} />}
+              meta={`/blog/${post.slug}`}
+              actions={
+                post.isPublished ? (
+                  <Link href={`/blog/${post.slug}`} className={secondaryButtonClass}>
+                    View
+                  </Link>
+                ) : (
+                  <form action={publishBlogAction}>
+                    <input type="hidden" name="id" value={post.id} />
+                    <button type="submit" className={primaryButtonClass}>
+                      Publish
+                    </button>
+                  </form>
+                )
+              }
+            />
+          ))
+        )}
+      </AdminList>
     </div>
   );
 }

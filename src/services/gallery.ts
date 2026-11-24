@@ -5,7 +5,11 @@ export type GalleryItem = {
   id: string;
   src: string;
   title: string;
+  titleMr?: string | null;
+  titleHi?: string | null;
   caption: string;
+  captionMr?: string | null;
+  captionHi?: string | null;
   category: string;
 };
 
@@ -19,7 +23,11 @@ const getCachedGalleryItems = unstable_cache(
       id: row.id,
       src: row.src,
       title: row.title,
+      titleMr: row.titleMr,
+      titleHi: row.titleHi,
       caption: row.caption ?? "",
+      captionMr: row.captionMr,
+      captionHi: row.captionHi,
       category: row.category,
     }));
   },

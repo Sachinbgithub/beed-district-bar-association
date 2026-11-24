@@ -5,7 +5,11 @@ import type { AssociationEvent } from "@/types";
 function mapEvent(row: {
   id: string;
   title: string;
+  titleMr?: string | null;
+  titleHi?: string | null;
   description: string | null;
+  descriptionMr?: string | null;
+  descriptionHi?: string | null;
   venue: string | null;
   startsAt: Date;
   endsAt: Date | null;
@@ -16,7 +20,11 @@ function mapEvent(row: {
   return {
     id: row.id,
     title: row.title,
+    titleMr: row.titleMr,
+    titleHi: row.titleHi,
     description: row.description ?? "",
+    descriptionMr: row.descriptionMr,
+    descriptionHi: row.descriptionHi,
     venue: row.venue ?? "",
     startsAt: row.startsAt.toISOString(),
     endsAt: row.endsAt?.toISOString(),

@@ -1,14 +1,18 @@
 import { AchievementCard } from "@/components/features/achievements/achievement-card";
 import { SectionHeader } from "@/components/ui/section-header";
+import { getDictionary } from "@/i18n/dictionaries";
+import { getLocale } from "@/lib/locale";
 import type { Achievement } from "@/types";
 
-export function HomeAchievements({ items }: { items: Achievement[] }) {
+export async function HomeAchievements({ items }: { items: Achievement[] }) {
+  const dict = getDictionary(await getLocale());
+
   return (
     <section>
       <SectionHeader
-        title="Our Achievements"
+        title={dict.copy.achievementsTitle}
         href="/about"
-        actionLabel="View All"
+        actionLabel={dict.common.viewAll}
         actionIcon={<TrophyIcon />}
       />
       <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">

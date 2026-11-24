@@ -1,18 +1,29 @@
 import Image from "next/image";
 import Link from "next/link";
+import { getDictionary } from "@/i18n/dictionaries";
 import { formatDate, splitEventDate } from "@/lib/format";
+import { getLocale, pickLocalized } from "@/lib/locale";
 import type { AssociationEvent } from "@/types";
 
-const categoryLabel: Record<AssociationEvent["category"], string> = {
+const eventCategoryKey = {
   Seminar: "Seminar",
   Meeting: "Meeting",
   Cultural: "Cultural",
-  Welfare: "Legal Aid",
+  Welfare: "LegalAid",
   Sports: "Sports",
-};
+} as const;
 
-export function EventCard({ event }: { event: AssociationEvent }) {
+export async function EventCard({ event }: { event: AssociationEvent }) {
+  const locale = await getLocale();
+  const dict = getDictionary(locale);
   const { day, monthYear } = splitEventDate(event.startsAt);
+  const title = pickLocalized(locale, event.title, event.titleMr, event.titleHi);
+  const description = pickLocalized(
+    locale,
+    event.description,
+    event.descriptionMr,
+    event.descriptionHi,
+  );
 
   return (
     <article className="flex h-full flex-col overflow-hidden rounded-2xl border border-[var(--border)] bg-white shadow-[0_1px_3px_rgba(26,39,68,0.06)]">
@@ -20,7 +31,7 @@ export function EventCard({ event }: { event: AssociationEvent }) {
         {event.image ? (
           <Image
             src={event.image}
-            alt={event.title}
+            alt={title}
             fill
             className="object-cover"
             sizes="(max-width: 768px) 100vw, 33vw"
@@ -38,10 +49,10 @@ export function EventCard({ event }: { event: AssociationEvent }) {
 
       <div className="flex flex-1 flex-col p-5">
         <span className="w-fit rounded-full bg-[var(--badge-blue)] px-2.5 py-1 text-xs font-medium text-[var(--badge-blue-text)]">
-          {categoryLabel[event.category]}
+          {dict.category[eventCategoryKey[event.category]]}
         </span>
         <h3 className="mt-3 font-serif text-lg font-bold leading-snug text-[var(--navy)]">
-          {event.title}
+          {title}
         </h3>
         <div className="mt-3 space-y-1.5 text-sm text-[var(--muted)]">
           <p className="inline-flex items-center gap-2">
@@ -54,13 +65,13 @@ export function EventCard({ event }: { event: AssociationEvent }) {
           </p>
         </div>
         <p className="mt-3 line-clamp-3 flex-1 text-sm leading-relaxed text-[var(--muted)]">
-          {event.description}
+          {description}
         </p>
         <Link
           href="/events"
           className="mt-5 inline-flex w-fit rounded-lg border border-[var(--border)] px-3.5 py-2 text-sm font-medium text-[var(--navy)] transition hover:border-[var(--gold)]"
         >
-          View Details
+          {dict.copy.viewDetails}
         </Link>
       </div>
     </article>

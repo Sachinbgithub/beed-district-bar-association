@@ -5,7 +5,11 @@ import type { Notice } from "@/types";
 function mapNotice(row: {
   id: string;
   title: string;
+  titleMr?: string | null;
+  titleHi?: string | null;
   body: string;
+  bodyMr?: string | null;
+  bodyHi?: string | null;
   category: string;
   publishedAt: Date | null;
   pdfFileName: string | null;
@@ -14,7 +18,11 @@ function mapNotice(row: {
   return {
     id: row.id,
     title: row.title,
+    titleMr: row.titleMr,
+    titleHi: row.titleHi,
     body: row.body,
+    bodyMr: row.bodyMr,
+    bodyHi: row.bodyHi,
     category: row.category as Notice["category"],
     publishedAt: (row.publishedAt ?? new Date()).toISOString().slice(0, 10),
     pdfFileName: row.pdfFileName ?? undefined,

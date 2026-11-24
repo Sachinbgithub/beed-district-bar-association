@@ -26,3 +26,10 @@ export function pickLocalized(
   if (locale === "hi" && hi) return hi;
   return en;
 }
+
+export function formatMessage(template: string, values: Record<string, string | number>) {
+  return Object.entries(values).reduce(
+    (text, [key, value]) => text.replaceAll(`{${key}}`, String(value)),
+    template,
+  );
+}

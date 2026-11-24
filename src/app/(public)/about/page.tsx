@@ -3,18 +3,20 @@ import { BearerCard } from "@/components/features/office-bearers/bearer-card";
 import { Container } from "@/components/layout/container";
 import { Card } from "@/components/ui/card";
 import { SectionHeading } from "@/components/ui/section-heading";
-import { siteConfig } from "@/config/site";
 import { aboutContent } from "@/data/about";
+import { getDictionary } from "@/i18n/dictionaries";
+import { formatMessage, getLocale } from "@/lib/locale";
 import { getOfficeBearers, getPresidentMessage } from "@/services/office-bearers";
 
 export default async function AboutPage() {
+  const dict = getDictionary(await getLocale());
   const [bearers, message] = await Promise.all([getOfficeBearers(), getPresidentMessage()]);
 
   return (
     <Container className="py-10">
       <SectionHeading
-        title="About the Association"
-        description={`${siteConfig.name} — history, office bearers, membership, and facilities at the District Court, Beed.`}
+        title={dict.copy.aboutTitle}
+        description={formatMessage(dict.copy.aboutDescription, { name: dict.copy.siteName })}
       />
 
       <section className="grid gap-6 lg:grid-cols-2">
@@ -35,7 +37,7 @@ export default async function AboutPage() {
             </p>
           ))}
           <Card className="bg-[var(--navy)] text-white">
-            <p className="text-xs uppercase tracking-wide text-[var(--gold)]">President&apos;s message</p>
+            <p className="text-xs uppercase tracking-wide text-[var(--gold)]">{dict.copy.presidentsMessage}</p>
             <p className="mt-3 text-sm leading-relaxed text-white/85">{message.body}</p>
             <p className="mt-4 text-sm font-medium">
               — {message.author}
@@ -47,10 +49,10 @@ export default async function AboutPage() {
       </section>
 
       <section className="mt-12">
-        <h2 className="font-serif text-2xl font-bold text-[var(--navy)]">Office Bearers</h2>
+        <h2 className="font-serif text-2xl font-bold text-[var(--navy)]">{dict.nav.officeBearers}</h2>
         <div className="mt-2 h-0.5 w-16 bg-[var(--gold)]" />
         <p className="mt-3 text-sm text-[var(--muted)]">
-          Elected representatives of the Association for the current term
+          {dict.copy.bearersSubtitle}
         </p>
         <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {bearers.map((person) => (
@@ -60,7 +62,7 @@ export default async function AboutPage() {
       </section>
 
       <section className="mt-12">
-        <h2 className="font-serif text-2xl font-bold text-[var(--navy)]">Objectives</h2>
+        <h2 className="font-serif text-2xl font-bold text-[var(--navy)]">{dict.copy.objectives}</h2>
         <div className="mt-2 h-0.5 w-16 bg-[var(--gold)]" />
         <ul className="mt-4 grid gap-3 sm:grid-cols-2">
           {aboutContent.objectives.map((item) => (
@@ -76,7 +78,7 @@ export default async function AboutPage() {
 
       <section className="mt-12 grid gap-8 lg:grid-cols-2">
         <div>
-          <h2 className="font-serif text-2xl font-bold text-[var(--navy)]">Membership</h2>
+          <h2 className="font-serif text-2xl font-bold text-[var(--navy)]">{dict.nav.membership}</h2>
           <div className="mt-2 h-0.5 w-16 bg-[var(--gold)]" />
           <p className="mt-3 text-[var(--muted)]">{aboutContent.membership.eligibility}</p>
           <ul className="mt-4 list-disc space-y-2 pl-5 text-sm text-[var(--muted)]">
@@ -86,7 +88,7 @@ export default async function AboutPage() {
           </ul>
         </div>
         <Card>
-          <h3 className="font-serif font-bold text-[var(--navy)]">Fee structure (indicative)</h3>
+          <h3 className="font-serif font-bold text-[var(--navy)]">{dict.copy.feeStructure}</h3>
           <ul className="mt-4 divide-y divide-[var(--border)]">
             {aboutContent.membership.fees.map((fee) => (
               <li key={fee.label} className="flex items-center justify-between gap-4 py-3 text-sm">

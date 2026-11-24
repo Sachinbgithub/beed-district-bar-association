@@ -1,4 +1,4 @@
-import { connection } from "next/server";
+import { unstable_cache } from "next/cache";
 import { db } from "@/lib/db";
 import type { AssociationEvent } from "@/types";
 
@@ -26,25 +26,40 @@ function mapEvent(row: {
   };
 }
 
+const getCachedEvents = unstable_cache(
+  async (): Promise<AssociationEvent[]> => {
+    const rows = await db.event.findMany({
+      where: { isPublished: true },
+      orderBy: { startsAt: "asc" },
+    });
+    return rows.map(mapEvent);
+  },
+  ["published-events"],
+  { revalidate: 60, tags: ["events"] },
+);
+
 export async function getEvents(): Promise<AssociationEvent[]> {
-  const rows = await db.event.findMany({
-    where: { isPublished: true },
-    orderBy: { startsAt: "asc" },
-  });
-  return rows.map(mapEvent);
+  return getCachedEvents();
 }
 
+const getCachedUpcomingEvents = unstable_cache(
+  async (limit: number): Promise<AssociationEvent[]> => {
+    const rows = await db.event.findMany({
+      where: {
+        isPublished: true,
+        startsAt: { gte: new Date() },
+      },
+      orderBy: { startsAt: "asc" },
+      take: limit,
+    });
+    return rows.map(mapEvent);
+  },
+  ["upcoming-events"],
+  { revalidate: 60, tags: ["events"] },
+);
+
 export async function getUpcomingEvents(limit = 3): Promise<AssociationEvent[]> {
-  await connection();
-  const rows = await db.event.findMany({
-    where: {
-      isPublished: true,
-      startsAt: { gte: new Date() },
-    },
-    orderBy: { startsAt: "asc" },
-    take: limit,
-  });
-  return rows.map(mapEvent);
+  return getCachedUpcomingEvents(limit);
 }
 
 export async function getAdminEvents() {

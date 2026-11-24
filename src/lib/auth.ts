@@ -1,3 +1,4 @@
+import { cache } from "react";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import type { User } from "@prisma/client";
@@ -51,7 +52,7 @@ export async function destroySession() {
   }
 }
 
-export async function getSessionUser(): Promise<SessionUser | null> {
+export const getSessionUser = cache(async (): Promise<SessionUser | null> => {
   const cookieStore = await cookies();
   const token = cookieStore.get(SESSION_COOKIE)?.value;
   if (!token) return null;
@@ -75,7 +76,7 @@ export async function getSessionUser(): Promise<SessionUser | null> {
     fullName: session.user.member?.fullName ?? null,
     enrollmentNo: session.user.member?.enrollmentNo ?? null,
   };
-}
+});
 
 export async function requireUser(roles?: Role[]) {
   const user = await getSessionUser();
@@ -96,17 +97,15 @@ export async function findUserForLogin(login: string): Promise<(User & { member:
   const value = login.trim();
   if (!value) return null;
 
-  const byEmail = await db.user.findUnique({
-    where: { email: value.toLowerCase() },
+  return db.user.findFirst({
+    where: {
+      OR: [
+        { email: value.toLowerCase() },
+        { member: { enrollmentNo: value } },
+      ],
+    },
     include: { member: true },
   });
-  if (byEmail) return byEmail;
-
-  const byEnrollment = await db.member.findUnique({
-    where: { enrollmentNo: value },
-    include: { user: { include: { member: true } } },
-  });
-  return byEnrollment?.user ?? null;
 }
 
 export function redirectForRole(role: Role) {

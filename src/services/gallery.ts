@@ -1,3 +1,4 @@
+import { unstable_cache } from "next/cache";
 import { db } from "@/lib/db";
 
 export type GalleryItem = {
@@ -8,18 +9,26 @@ export type GalleryItem = {
   category: string;
 };
 
+const getCachedGalleryItems = unstable_cache(
+  async (): Promise<GalleryItem[]> => {
+    const rows = await db.galleryImage.findMany({
+      where: { isPublished: true },
+      orderBy: [{ sortOrder: "asc" }, { createdAt: "desc" }],
+    });
+    return rows.map((row) => ({
+      id: row.id,
+      src: row.src,
+      title: row.title,
+      caption: row.caption ?? "",
+      category: row.category,
+    }));
+  },
+  ["published-gallery"],
+  { revalidate: 60, tags: ["gallery"] },
+);
+
 export async function getGalleryItems(): Promise<GalleryItem[]> {
-  const rows = await db.galleryImage.findMany({
-    where: { isPublished: true },
-    orderBy: [{ sortOrder: "asc" }, { createdAt: "desc" }],
-  });
-  return rows.map((row) => ({
-    id: row.id,
-    src: row.src,
-    title: row.title,
-    caption: row.caption ?? "",
-    category: row.category,
-  }));
+  return getCachedGalleryItems();
 }
 
 export async function getAdminGallery() {

@@ -1,6 +1,7 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
+import { revalidatePath, updateTag } from "next/cache";
+import { after } from "next/server";
 import { mkdir, writeFile } from "fs/promises";
 import path from "path";
 import { requireCompany, requireStaff } from "@/lib/auth";
@@ -57,14 +58,17 @@ export async function createEventAction(
   });
 
   if (publish) {
-    await notifyActiveMembers({
-      kind: "event",
-      sourceId: event.id,
-      subject: `New event: ${event.title}`,
-      text: `${event.title}\n${event.venue ?? ""}\n${event.description ?? ""}`,
-    });
+    after(() =>
+      notifyActiveMembers({
+        kind: "event",
+        sourceId: event.id,
+        subject: `New event: ${event.title}`,
+        text: `${event.title}\n${event.venue ?? ""}\n${event.description ?? ""}`,
+      }),
+    );
   }
 
+  updateTag("events");
   revalidatePath("/events");
   revalidatePath("/");
   revalidatePath("/admin/events");
@@ -75,12 +79,15 @@ export async function publishEventAction(formData: FormData) {
   await requireStaff();
   const id = String(formData.get("id") || "");
   const event = await publishEvent(id);
-  await notifyActiveMembers({
-    kind: "event",
-    sourceId: event.id,
-    subject: `New event: ${event.title}`,
-    text: `${event.title}\n${event.venue ?? ""}\n${event.description ?? ""}`,
-  });
+  after(() =>
+    notifyActiveMembers({
+      kind: "event",
+      sourceId: event.id,
+      subject: `New event: ${event.title}`,
+      text: `${event.title}\n${event.venue ?? ""}\n${event.description ?? ""}`,
+    }),
+  );
+  updateTag("events");
   revalidatePath("/events");
   revalidatePath("/");
   revalidatePath("/admin/events");
@@ -108,14 +115,17 @@ export async function createNoticeAction(
   });
 
   if (publish) {
-    await notifyActiveMembers({
-      kind: "notice",
-      sourceId: notice.id,
-      subject: `Notice: ${notice.title}`,
-      text: notice.body,
-    });
+    after(() =>
+      notifyActiveMembers({
+        kind: "notice",
+        sourceId: notice.id,
+        subject: `Notice: ${notice.title}`,
+        text: notice.body,
+      }),
+    );
   }
 
+  updateTag("notices");
   revalidatePath("/notices");
   revalidatePath("/");
   revalidatePath("/admin/notices");
@@ -126,12 +136,15 @@ export async function publishNoticeAction(formData: FormData) {
   await requireStaff();
   const id = String(formData.get("id") || "");
   const notice = await publishNotice(id);
-  await notifyActiveMembers({
-    kind: "notice",
-    sourceId: notice.id,
-    subject: `Notice: ${notice.title}`,
-    text: notice.body,
-  });
+  after(() =>
+    notifyActiveMembers({
+      kind: "notice",
+      sourceId: notice.id,
+      subject: `Notice: ${notice.title}`,
+      text: notice.body,
+    }),
+  );
+  updateTag("notices");
   revalidatePath("/notices");
   revalidatePath("/");
   revalidatePath("/admin/notices");
@@ -169,6 +182,7 @@ export async function uploadGalleryAction(
     uploadedById: user.id,
   });
 
+  updateTag("gallery");
   revalidatePath("/gallery");
   revalidatePath("/");
   revalidatePath("/admin/gallery");
@@ -194,14 +208,17 @@ export async function createBlogAction(
   });
 
   if (publish) {
-    await notifyActiveMembers({
-      kind: "blog",
-      sourceId: post.id,
-      subject: `New post: ${post.title}`,
-      text: post.body,
-    });
+    after(() =>
+      notifyActiveMembers({
+        kind: "blog",
+        sourceId: post.id,
+        subject: `New post: ${post.title}`,
+        text: post.body,
+      }),
+    );
   }
 
+  updateTag("blog");
   revalidatePath("/blog");
   revalidatePath("/admin/blog");
   return { success: publish ? "Post published." : "Post saved as draft." };
@@ -211,12 +228,15 @@ export async function publishBlogAction(formData: FormData) {
   await requireStaff();
   const id = String(formData.get("id") || "");
   const post = await publishPost(id);
-  await notifyActiveMembers({
-    kind: "blog",
-    sourceId: post.id,
-    subject: `New post: ${post.title}`,
-    text: post.body,
-  });
+  after(() =>
+    notifyActiveMembers({
+      kind: "blog",
+      sourceId: post.id,
+      subject: `New post: ${post.title}`,
+      text: post.body,
+    }),
+  );
+  updateTag("blog");
   revalidatePath("/blog");
   revalidatePath("/admin/blog");
 }

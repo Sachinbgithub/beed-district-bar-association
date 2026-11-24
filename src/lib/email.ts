@@ -17,6 +17,20 @@ export async function notifyActiveMembers(input: NotifyInput) {
     select: { id: true, email: true },
   });
 
+  if (members.length === 0) return;
+
+  const existing = await db.emailDelivery.findMany({
+    where: {
+      kind: input.kind,
+      sourceId: input.sourceId,
+      userId: { in: members.map((member) => member.id) },
+    },
+    select: { userId: true },
+  });
+  const alreadyDelivered = new Set(existing.map((row) => row.userId));
+  const pendingMembers = members.filter((member) => !alreadyDelivered.has(member.id));
+  if (pendingMembers.length === 0) return;
+
   const host = process.env.SMTP_HOST;
   const transporter =
     host &&
@@ -31,19 +45,15 @@ export async function notifyActiveMembers(input: NotifyInput) {
     });
 
   const from = process.env.SMTP_FROM || "Beed District Bar Association <noreply@localhost>";
+  const deliveries: {
+    kind: string;
+    sourceId: string;
+    userId: string;
+    subject: string;
+    status: string;
+  }[] = [];
 
-  for (const member of members) {
-    const existing = await db.emailDelivery.findUnique({
-      where: {
-        kind_sourceId_userId: {
-          kind: input.kind,
-          sourceId: input.sourceId,
-          userId: member.id,
-        },
-      },
-    });
-    if (existing) continue;
-
+  for (const member of pendingMembers) {
     let status = "logged";
     try {
       if (transporter) {
@@ -62,14 +72,17 @@ export async function notifyActiveMembers(input: NotifyInput) {
       console.error(`[email] failed for ${member.email}`, error);
     }
 
-    await db.emailDelivery.create({
-      data: {
-        kind: input.kind,
-        sourceId: input.sourceId,
-        userId: member.id,
-        subject: input.subject,
-        status,
-      },
+    deliveries.push({
+      kind: input.kind,
+      sourceId: input.sourceId,
+      userId: member.id,
+      subject: input.subject,
+      status,
     });
   }
+
+  await db.emailDelivery.createMany({
+    data: deliveries,
+    skipDuplicates: true,
+  });
 }

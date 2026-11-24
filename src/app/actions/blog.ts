@@ -1,6 +1,6 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
+import { revalidatePath, updateTag } from "next/cache";
 import { getSessionUser, isStaffRole } from "@/lib/auth";
 import { addComment, toggleLike } from "@/services/blog";
 
@@ -11,6 +11,7 @@ export async function likePostAction(formData: FormData) {
     const postId = String(formData.get("postId") || "");
     const slug = String(formData.get("slug") || "");
     await toggleLike(postId, user.id);
+    updateTag("blog");
     revalidatePath(`/blog/${slug}`);
     revalidatePath("/blog");
   }
@@ -27,5 +28,7 @@ export async function commentPostAction(formData: FormData) {
   if (!body) return;
 
   await addComment(postId, user.id, body);
+  updateTag("blog");
   revalidatePath(`/blog/${slug}`);
+  revalidatePath("/blog");
 }

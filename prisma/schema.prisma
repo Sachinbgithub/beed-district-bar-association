@@ -32,6 +32,8 @@ model Session {
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   expiresAt DateTime
   createdAt DateTime @default(now())
+
+  @@index([userId])
 }
 
 model Member {
@@ -61,6 +63,8 @@ model MembershipApplication {
   status       String    @default("PENDING")
   reviewedAt   DateTime?
   createdAt    DateTime  @default(now())
+
+  @@index([status, createdAt])
 }
 
 model Event {
@@ -81,6 +85,8 @@ model Event {
   createdBy     User?     @relation(fields: [createdById], references: [id], onDelete: NoAction, onUpdate: NoAction)
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
+
+  @@index([isPublished, startsAt])
 }
 
 model Notice {
@@ -97,6 +103,8 @@ model Notice {
   publishedAt DateTime?
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
+
+  @@index([isPublished, publishedAt])
 }
 
 model GalleryImage {
@@ -114,6 +122,8 @@ model GalleryImage {
   uploadedById String?
   uploadedBy   User?    @relation(fields: [uploadedById], references: [id], onDelete: NoAction, onUpdate: NoAction)
   createdAt    DateTime @default(now())
+
+  @@index([isPublished, sortOrder, createdAt])
 }
 
 model BlogPost {
@@ -133,6 +143,8 @@ model BlogPost {
   comments    BlogComment[]
   createdAt   DateTime      @default(now())
   updatedAt   DateTime      @updatedAt
+
+  @@index([isPublished, publishedAt])
 }
 
 model BlogLike {
@@ -154,6 +166,8 @@ model BlogComment {
   user      User     @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   body      String   @db.Text
   createdAt DateTime @default(now())
+
+  @@index([postId, createdAt])
 }
 
 model EmailDelivery {

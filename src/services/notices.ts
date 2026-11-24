@@ -1,3 +1,4 @@
+import { unstable_cache } from "next/cache";
 import { db } from "@/lib/db";
 import type { Notice } from "@/types";
 
@@ -21,17 +22,37 @@ function mapNotice(row: {
   };
 }
 
+const getCachedNotices = unstable_cache(
+  async (): Promise<Notice[]> => {
+    const rows = await db.notice.findMany({
+      where: { isPublished: true },
+      orderBy: { publishedAt: "desc" },
+    });
+    return rows.map(mapNotice);
+  },
+  ["published-notices"],
+  { revalidate: 60, tags: ["notices"] },
+);
+
 export async function getNotices(): Promise<Notice[]> {
-  const rows = await db.notice.findMany({
-    where: { isPublished: true },
-    orderBy: { publishedAt: "desc" },
-  });
-  return rows.map(mapNotice);
+  return getCachedNotices();
 }
 
+const getCachedLatestNotices = unstable_cache(
+  async (limit: number): Promise<Notice[]> => {
+    const rows = await db.notice.findMany({
+      where: { isPublished: true },
+      orderBy: { publishedAt: "desc" },
+      take: limit,
+    });
+    return rows.map(mapNotice);
+  },
+  ["latest-notices"],
+  { revalidate: 60, tags: ["notices"] },
+);
+
 export async function getLatestNotices(limit = 4): Promise<Notice[]> {
-  const all = await getNotices();
-  return all.slice(0, limit);
+  return getCachedLatestNotices(limit);
 }
 
 export async function getAdminNotices() {

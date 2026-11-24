@@ -1,3 +1,4 @@
+import { unstable_cache } from "next/cache";
 import { db } from "@/lib/db";
 
 export function slugify(title: string) {
@@ -8,28 +9,77 @@ export function slugify(title: string) {
     .slice(0, 80);
 }
 
+const getCachedPublishedPosts = unstable_cache(
+  async () => {
+    return db.blogPost.findMany({
+      where: { isPublished: true },
+      orderBy: { publishedAt: "desc" },
+      include: {
+        _count: { select: { likes: true, comments: true } },
+      },
+    });
+  },
+  ["published-blog-posts"],
+  { revalidate: 60, tags: ["blog"] },
+);
+
 export async function getPublishedPosts() {
-  return db.blogPost.findMany({
-    where: { isPublished: true },
-    orderBy: { publishedAt: "desc" },
-    include: {
-      _count: { select: { likes: true, comments: true } },
-    },
-  });
+  const posts = await getCachedPublishedPosts();
+  return posts.map((post) => ({
+    ...post,
+    publishedAt: post.publishedAt ? new Date(post.publishedAt) : null,
+    createdAt: new Date(post.createdAt),
+    updatedAt: new Date(post.updatedAt),
+  }));
 }
 
-export async function getPostBySlug(slug: string) {
-  return db.blogPost.findFirst({
-    where: { slug, isPublished: true },
-    include: {
-      likes: true,
-      comments: {
-        orderBy: { createdAt: "desc" },
-        include: { user: { include: { member: true } } },
+const getCachedPostBySlug = unstable_cache(
+  async (slug: string) => {
+    return db.blogPost.findFirst({
+      where: { slug, isPublished: true },
+      include: {
+        likes: true,
+        comments: {
+          orderBy: { createdAt: "desc" },
+          include: { user: { include: { member: true } } },
+        },
+        _count: { select: { likes: true, comments: true } },
       },
-      _count: { select: { likes: true, comments: true } },
-    },
-  });
+    });
+  },
+  ["blog-post-by-slug"],
+  { revalidate: 60, tags: ["blog"] },
+);
+
+export async function getPostBySlug(slug: string) {
+  const post = await getCachedPostBySlug(slug);
+  if (!post) return null;
+  return {
+    ...post,
+    publishedAt: post.publishedAt ? new Date(post.publishedAt) : null,
+    createdAt: new Date(post.createdAt),
+    updatedAt: new Date(post.updatedAt),
+    likes: post.likes.map((like) => ({
+      ...like,
+      createdAt: new Date(like.createdAt),
+    })),
+    comments: post.comments.map((comment) => ({
+      ...comment,
+      createdAt: new Date(comment.createdAt),
+      user: {
+        ...comment.user,
+        createdAt: new Date(comment.user.createdAt),
+        updatedAt: new Date(comment.user.updatedAt),
+        member: comment.user.member
+          ? {
+              ...comment.user.member,
+              createdAt: new Date(comment.user.member.createdAt),
+              updatedAt: new Date(comment.user.member.updatedAt),
+            }
+          : null,
+      },
+    })),
+  };
 }
 
 export async function getAdminPosts() {

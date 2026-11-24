@@ -3,8 +3,9 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlserver"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 model User {
@@ -67,9 +68,9 @@ model Event {
   title         String
   titleMr       String?
   titleHi       String?
-  description   String?   @db.NVarChar(Max)
-  descriptionMr String?   @db.NVarChar(Max)
-  descriptionHi String?   @db.NVarChar(Max)
+  description   String?   @db.Text
+  descriptionMr String?   @db.Text
+  descriptionHi String?   @db.Text
   venue         String?
   startsAt      DateTime
   endsAt        DateTime?
@@ -87,9 +88,9 @@ model Notice {
   title       String
   titleMr     String?
   titleHi     String?
-  body        String    @db.NVarChar(Max)
-  bodyMr      String?   @db.NVarChar(Max)
-  bodyHi      String?   @db.NVarChar(Max)
+  body        String    @db.Text
+  bodyMr      String?   @db.Text
+  bodyHi      String?   @db.Text
   category    String    @default("General")
   pdfFileName String?
   isPublished Boolean   @default(false)
@@ -103,9 +104,9 @@ model GalleryImage {
   title        String
   titleMr      String?
   titleHi      String?
-  caption      String?  @db.NVarChar(Max)
-  captionMr    String?  @db.NVarChar(Max)
-  captionHi    String?  @db.NVarChar(Max)
+  caption      String?  @db.Text
+  captionMr    String?  @db.Text
+  captionHi    String?  @db.Text
   category     String
   src          String
   isPublished  Boolean  @default(false)
@@ -121,9 +122,9 @@ model BlogPost {
   title       String
   titleMr     String?
   titleHi     String?
-  body        String        @db.NVarChar(Max)
-  bodyMr      String?       @db.NVarChar(Max)
-  bodyHi      String?       @db.NVarChar(Max)
+  body        String        @db.Text
+  bodyMr      String?       @db.Text
+  bodyHi      String?       @db.Text
   isPublished Boolean       @default(false)
   publishedAt DateTime?
   authorId    String?
@@ -151,7 +152,7 @@ model BlogComment {
   post      BlogPost @relation(fields: [postId], references: [id], onDelete: Cascade)
   userId    String
   user      User     @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  body      String   @db.NVarChar(Max)
+  body      String   @db.Text
   createdAt DateTime @default(now())
 }
 
@@ -174,7 +175,7 @@ model ContactMessage {
   email     String
   phone     String?
   subject   String?
-  message   String   @db.NVarChar(Max)
+  message   String   @db.Text
   isRead    Boolean  @default(false)
   createdAt DateTime @default(now())
 }

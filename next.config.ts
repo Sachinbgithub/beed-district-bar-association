@@ -5,6 +5,9 @@ const nextConfig: NextConfig = {
   // Cookie-based auth and locale need request-time rendering.
   cacheComponents: false,
   reactCompiler: true,
+  experimental: {
+    agentUpgrade: "security",
+  },
   turbopack: {
     rules: {
       "*.css": {
